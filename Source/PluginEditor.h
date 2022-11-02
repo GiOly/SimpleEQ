@@ -11,14 +11,22 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
+template<typename PathType>
+struct AnalyzerPathGenerator
+{
+
+private:
+
+};
+
 struct LookAndFeel : juce::LookAndFeel_V4
 {
     void drawRotarySlider(juce::Graphics&,
-        int x, int y, int width, int height,
-        float sliderPosProportional,
-        float rotaryStartAngle,
-        float rotaryEndAngle,
-        juce::Slider&) override;
+                          int x, int y, int width, int height,
+                          float sliderPosProportional,
+                          float rotaryStartAngle,
+                          float rotaryEndAngle,
+                          juce::Slider&) override;
 };
 
 struct RotarySliderWithLabels : juce::Slider
@@ -36,6 +44,8 @@ struct RotarySliderWithLabels : juce::Slider
     {
         setLookAndFeel(nullptr);
     }
+
+    juce::Array<juce::String> labels;
 
     void paint(juce::Graphics& g) override;
     juce::Rectangle<int> getSliderBounds() const;
@@ -59,6 +69,8 @@ struct ResponseCurveComponent : juce::Component,
     ~ResponseCurveComponent();
 
     void paint(juce::Graphics&) override;
+
+    void resized() override;
 
     void parameterValueChanged(int parameterIndex, float newValue) override;
 
@@ -86,6 +98,12 @@ private:
     juce::Atomic<bool> parametersChanged{ false };
 
     MonoChain monoChain;
+
+    void updateChain();
+
+    juce::Image background;
+
+    juce::Rectangle<int> getRenderArea();
 };
 
 //==============================================================================
